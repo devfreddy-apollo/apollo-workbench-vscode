@@ -1,16 +1,20 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "ESNext",
-    "lib": ["ESNext"],
+    "target": "ES2021",
     "outDir": "out",
+    "lib": [
+      // For String.replaceAll
+      "ES2021",
+
+      // For @apollo/client "WindowOrWorkerGlobalScope" and "Response"
+      "DOM"
+    ],
     "sourceMap": true,
-    "strict": true,
     "rootDir": "src",
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
     "noImplicitAny": false,
     "esModuleInterop": true,
-    "skipLibCheck": true
-  },
-  "exclude": ["node_modules"],
-  "lib": ["dom"]
+  }
 }
