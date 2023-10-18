@@ -1,5 +1,5 @@
 import { existsSync, readdirSync } from 'fs';
-import path, { join, parse, resolve, normalize } from 'path';
+import { join, parse, resolve, normalize } from 'path';
 import { commands, ProgressLocation, Uri, window, workspace } from 'vscode';
 import { StateManager } from '../stateManager';
 import { WorkbenchDiagnostics } from '../diagnosticsManager';
@@ -369,7 +369,7 @@ export class FileProvider {
       const directory = directories[0];
       const dirents = readdirSync(directory, { withFileTypes: true });
       for (const dirent of dirents) {
-        const directoryPath = path.resolve(directory, dirent.name);
+        const directoryPath = resolve(directory, dirent.name);
         if (dirent.isDirectory() && dirent.name != 'node_modules') {
           directories.push(directoryPath);
         } else if (dirent.name.includes('.yaml')) {
