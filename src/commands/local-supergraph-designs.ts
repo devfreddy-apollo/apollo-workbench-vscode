@@ -501,7 +501,7 @@ export async function newDesign() {
     await promptOpenFolder();
   } else {
     const workbenchName = await window.showInputBox({
-      placeHolder: 'Enter name for workbench file',
+      placeHolder: "Enter supergraph's name",
     });
     if (!workbenchName) {
       const msg =
