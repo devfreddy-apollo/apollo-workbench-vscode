@@ -3,9 +3,9 @@ import { suite, before, afterEach } from 'mocha';
 import {
   activateExtension,
   cleanupWorkbenchFiles,
-} from './helpers';
+} from '../helpers';
 
-const key = 'Loaded-Folder';
+const key = 'Extension activation';
 
 suite(key, () => {
   before(activateExtension);

@@ -1,20 +1,17 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { readdirSync, unlinkSync } from 'fs';
-import { FileProvider } from '../../workbench/file-system/fileProvider';
+import { FileProvider } from '../workbench/file-system/fileProvider';
 import { log } from 'util';
 
-export const activateExtension = async () => {
-  return new Promise<void>((resolve) => {
-    const extension = vscode.extensions.getExtension(
-      'ApolloGraphQL.apollo-workbench-vscode',
-    );
-    if (extension) {
-      extension.activate().then(resolve);
-    } else {
-      resolve();
-    }
-  });
+export const activateExtension = async (): Promise<vscode.ExtensionContext> => {
+  const extension = vscode.extensions.getExtension(
+    'apollo-workbench',
+  );
+  if (!extension) {
+    return Promise.reject();
+  }
+  return extension.activate();
 };
 
 export function cleanupWorkbenchFiles() {
