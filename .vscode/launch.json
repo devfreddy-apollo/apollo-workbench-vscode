@@ -21,7 +21,7 @@
       "request": "launch",
       "skipFiles": ["<node_internals>/**"],
       "type": "node",
-      "runtimeVersion": "14.10.1",
+      "runtimeVersion": "18.18.0",
       "env": {
         "GITHUB_SHA": "",
         "GITHUB_TOKEN": ""
