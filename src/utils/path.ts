@@ -1,6 +1,8 @@
 import { Uri } from "vscode";
 import { Utils } from "vscode-uri";
 
+// https://github.com/microsoft/vscode-uri#readme
 export function getFileName(filePath: string){
-  return Utils.basename(Uri.parse(filePath)).split('.')[0];
+  const uri = Uri.parse(filePath);
+  return Utils.basename(uri);
 }
