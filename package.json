@@ -27,9 +27,9 @@
     "esbuild": "npm run esbuild-base -- --sourcemap",
     "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
     "vscode:package": "vsce package",
-    "compile": "tsc -p ./",
+    "compile": "tsc --project ./",
     "lint": "eslint . --ext .ts,.tsx",
-    "watch": "tsc -watch -p ./",
+    "watch": "tsc -watch --project ./",
     "postinstall": "npm run compile",
     "test": "node ./out/__tests__/testsNoStatus.js",
     "test:ci": "node ./out/__tests__/githubCheckTests.js"
