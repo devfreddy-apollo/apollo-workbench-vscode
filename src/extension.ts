@@ -54,7 +54,6 @@ import { Rover } from './workbench/rover';
 import { viewOperationDesign } from './workbench/webviews/operationDesign';
 import { openSandbox } from './workbench/webviews/sandbox';
 import { FederationReferenceProvider } from './workbench/federationReferenceProvider';
-import {shellPathSync} from 'shell-path';
 
 export const outputChannel = window.createOutputChannel('Apollo Workbench');
 
@@ -63,7 +62,7 @@ export async function deactivate(context: ExtensionContext) {
   await Rover.instance.stopRoverDev();
 }
 
-export async function activate(context: ExtensionContext) {	
+export async function activate(context: ExtensionContext) {
   StateManager.init(context);
   context.workspaceState.update('selectedWbFile', '');
   context.globalState.update('APOLLO_SELECTED_GRAPH_ID', '');
@@ -72,67 +71,104 @@ export async function activate(context: ExtensionContext) {
     'graphql',
     federationCompletionProvider,
   );
+
   languages.registerCodeActionsProvider(
     { language: 'graphql' },
     new FederationCodeActionProvider(),
   );
 
-  //Register Tree Data Providers
+  /*
+   * Register Tree Data Providers
+   */
   window.registerTreeDataProvider(
     'local-supergraph-designs',
     StateManager.instance.localSupergraphTreeDataProvider,
   );
+
   window.registerTreeDataProvider(
     'studio-graphs',
     StateManager.instance.apolloStudioGraphsProvider,
   );
+
   window.registerTreeDataProvider(
     'studio-operations',
     StateManager.instance.apolloStudioGraphOpsProvider,
   );
 
-  //Register commands to ensure a folder is open in the window to store workbench files
-  commands.registerCommand('extension.ensureFolderIsOpen', ensureFolderIsOpen);
-  commands.executeCommand('extension.ensureFolderIsOpen');
-  //Global Extension Commands
+  /*
+   * Global Extension Commands
+   * Command: "extension"
+   */
   commands.registerCommand('extension.login', enterGraphOSUserApiKey);
   commands.registerCommand('extension.logout', logout);
 
-  //*Local Supergraph Designs TreeView
-  //**Navigation Menu Commands
+  //Register commands to ensure a folder is open in the window to store workbench files
+  commands.registerCommand('extension.ensureFolderIsOpen', ensureFolderIsOpen);
+  commands.executeCommand('extension.ensureFolderIsOpen');
+
+  /*
+   * Name: "Studio Login"
+   * Command: "studio-login"
+   */
+  // commands.registerCommand('studio-login.login', async () => {
+  //   window.showInformationMessage('Hello world!');
+  // });
+
+  /*
+   * Name: "Local Supergraph Designs TreeView"
+   * Command: "local-supergraph-designs"
+   */
+
+  /*
+   * Navigation Menu Commands
+   */
   commands.registerCommand('local-supergraph-designs.newDesign', newDesign);
   commands.registerCommand(
     'local-supergraph-designs.refresh',
     refreshSupergraphs,
   );
-  //***Supergraph Schema Commands
+
+  /*
+   * Supergraph Schema Commands
+   */
   commands.registerCommand(
     'local-supergraph-designs.viewSupergraphSchema',
     viewSupergraphSchema,
   ); //on-click
+
   commands.registerCommand(
     'local-supergraph-designs.exportSupergraphSchema',
     exportSupergraphSchema,
   ); //right-click
-  //****Subgraph Summary Commands
+
+  /*
+   * Subgraph Summary Commands
+   */
   commands.registerCommand('local-supergraph-designs.addSubgraph', addSubgraph);
-  //****Subgraph Commands
+
+  /*
+   * Subgraph Commands
+   */
   commands.registerCommand(
     'local-supergraph-designs.editSubgraph',
     editSubgraph,
   ); //on-click
+
   commands.registerCommand(
     'local-supergraph-designs.deleteSubgraph',
     deleteSubgraph,
   );
+
   commands.registerCommand(
     'local-supergraph-designs.checkSubgraphSchema',
     checkSubgraphSchema,
   );
+
   commands.registerCommand(
     'local-supergraph-designs.mockSubgraph',
     mockSubgraph,
   );
+
   commands.registerCommand(
     'local-supergraph-designs.startRoverDevSession',
     startRoverDevSession,
@@ -149,21 +185,25 @@ export async function activate(context: ExtensionContext) {
       viewOperationDesignSideBySide,
     ),
   );
+
   context.subscriptions.push(
     commands.registerCommand('local-supergraph-designs.sandbox', openSandbox),
   );
+
   context.subscriptions.push(
     commands.registerCommand(
       'local-supergraph-designs.addOperation',
       addOperation,
     ),
   );
+
   context.subscriptions.push(
     commands.registerCommand(
       'local-supergraph-designs.deleteOperation',
       deleteOperation,
     ),
   );
+
   context.subscriptions.push(
     commands.registerCommand(
       'local-supergraph-designs.viewOperationDesign',
@@ -175,37 +215,52 @@ export async function activate(context: ExtensionContext) {
     'current-workbench-schemas.addFederationDirective',
     addFederationDirective,
   );
-  //Apollo Studio Graphs Commands
+
+  /*
+   * Command: "studio-graphs"
+   */
   commands.registerCommand(
     'studio-graphs.refreshSupergraphsFromGraphOS',
     refreshSupergraphsFromGraphOS,
   );
+
   commands.registerCommand('studio-graphs.openInGraphOS', openInGraphOS);
+
   commands.registerCommand(
     'studio-graphs.newDesignFromGraphOSSupergraph',
     newDesignFromGraphOSSupergraph,
   );
+
   commands.registerCommand(
     'studio-graphs.loadOperationsFromGraphOS',
     loadOperationsFromGraphOS,
   );
+
   commands.registerCommand(
     'studio-graphs.viewStudioOperation',
     viewStudioOperation,
   );
+
   commands.registerCommand('studio-graphs.switchOrg', switchOrg);
-  //Apollo Studio Graph Operations Commands
+
+  /*
+   * Command: "studio-operations"
+   */
   commands.registerCommand('studio-operations.addToDesign', addToDesign);
 
-  //Workspace - Register Providers and Events
+  /*
+   * Workspace - Register Providers and Events
+   */
   workspace.registerTextDocumentContentProvider(
     ApolloStudioOperationsProvider.scheme,
     new ApolloStudioOperationsProvider(),
   );
+
   workspace.registerTextDocumentContentProvider(
     ApolloRemoteSchemaProvider.scheme,
     new ApolloRemoteSchemaProvider(),
   );
+
   languages.registerReferenceProvider(
     { language: 'graphql' },
     new FederationReferenceProvider(),
@@ -218,6 +273,7 @@ export async function activate(context: ExtensionContext) {
       isCaseSensitive: true,
     },
   );
+
   workspace.onDidDeleteFiles((e) => {
     let deletedWorkbenchFile = false;
     e.files.forEach((f) => {
@@ -227,6 +283,7 @@ export async function activate(context: ExtensionContext) {
     if (deletedWorkbenchFile)
       StateManager.instance.localSupergraphTreeDataProvider.refresh();
   });
+
   workspace.onDidSaveTextDocument((doc) => {
     const docPath = doc.uri.fsPath;
 
